@@ -16,11 +16,8 @@ public class SwiftFlutterFloatWindowPlugin: NSObject, FlutterPlugin,AVPictureInP
         let factory = FloatWindowViewFactory(messenger: registrar.messenger())
         registrar.register(factory, withId: "flutter_float_window")
         
-        let liveFactory = FloatLiveWindowViewFactory(messenger: registrar.messenger())
-        registrar.register(liveFactory, withId: "flutter_float_live_window")
+    
         
-        let agoraLiveFactory = FlutterAgoraLiveViewFactory(messenger: registrar.messenger())
-        registrar.register(agoraLiveFactory, withId: "flutter_agora_live_view")
         
         let videoPlayerFactory = FlutterVideoPlayerFactory(messenger: registrar.messenger())
         registrar.register(videoPlayerFactory, withId: "flutter_video_player_view")

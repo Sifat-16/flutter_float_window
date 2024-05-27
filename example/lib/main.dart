@@ -713,11 +713,11 @@ class _MyAppState extends State<MyApp>
                   //       print("canShowFloatWindow=$canShowFloatWindow");
                   //     },
                   //     child: Text('canShow for ios')),
-                  //   ElevatedButton(
-                  //     onPressed: () async {
-                  //      NavigationUtil.getInstance().pushPage(context, 'testFlutterVideoView', widget: TestFlutterVideoViewPage());
-                  //     },
-                  //     child: Text('testFlutterVideoView')),
+                    ElevatedButton(
+                      onPressed: () async {
+                       NavigationUtil.getInstance().pushPage(context, 'testFlutterVideoView', widget: TestFlutterVideoViewPage());
+                      },
+                      child: Text('testFlutterVideoView')),
                   ],),
                   
                 ],
