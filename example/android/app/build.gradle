@@ -44,7 +44,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         applicationId "com.kevin.flutterfloatwindow.flutter_float_window_example"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

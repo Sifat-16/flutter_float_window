@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath 'com.android.tools.build:gradle:7.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -25,7 +25,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -41,20 +41,17 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
     }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.18.0'
-    implementation 'com.google.android.exoplayer:exoplayer-hls:2.18.0'
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.18.0'
-    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.0'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.18.0'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.19.1'
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.19.1'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.19.1'
+    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.19.1'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.19.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    api 'io.agora.rtc:iris-rtc:4.2.1-build.1'
-    api 'io.agora.rtc:full-sdk:4.2.1'
-    api 'io.agora.rtc:full-screen-sharing:4.2.1'
 }

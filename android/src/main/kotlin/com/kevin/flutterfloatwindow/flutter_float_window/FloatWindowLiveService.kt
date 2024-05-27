@@ -30,10 +30,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
-import io.agora.rtc2.Constants
-import io.agora.rtc2.IRtcEngineEventHandler
-import io.agora.rtc2.RtcEngine
-import io.agora.rtc2.video.VideoCanvas
+
 
 
 class FloatWindowLiveService : Service() {
@@ -57,7 +54,7 @@ class FloatWindowLiveService : Service() {
     private lateinit var mContext: Context
     private var mScreenWidth: Int = 0
     private var mScreenHeight: Int = 0
-    private lateinit var mRtcEngine: RtcEngine
+
 
     val touchResponseDistance = 10
 
@@ -112,18 +109,13 @@ class FloatWindowLiveService : Service() {
 
         fun initFloatLive(context: Activity, appId: String,token: String, channelName: String, optionalUid: Int) {
             initFloatWindow(context)
-            initLiveEngine(context, appId,token, channelName, optionalUid)
+
         }
 
         fun joinChannel(context: Context, token: String, channelName: String, optionalUid: Int) {
             Log.d(TAG, "===========joinChannel==$hasInitialized")
             if (hasInitialized) {
 
-                mRtcEngine.joinChannel(
-                    token, channelName,
-                    "",
-                    optionalUid
-                )
                 showFloatView()
             } else {
                 Log.d(TAG, "===========Please initialized first")
@@ -131,60 +123,7 @@ class FloatWindowLiveService : Service() {
         }
     }
 
-    private val mRtcEventHandler: IRtcEngineEventHandler = object : IRtcEngineEventHandler() {
-        // 监听频道内的远端主播，获取主播的 uid 信息。
-        override fun onUserJoined(uid: Int, elapsed: Int) {
-            Log.d(TAG, "onUserJoined=$uid")
-            Handler(Looper.getMainLooper()).post {
-                val surfaceView = RtcEngine.CreateRendererView(mContext.applicationContext)
-                rlStatus.visibility=View.GONE
-                tvStatus.visibility=View.VISIBLE
-                flContainer.addView(surfaceView)
-                mRtcEngine.setupRemoteVideo(
-                    VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid)
-                )
-            }
-        }
 
-        override fun onUserOffline(uid: Int, reason: Int) {
-            super.onUserOffline(uid, reason)
-            Log.d(TAG, "onUserOffline=$uid,reason=$reason")
-            Handler(Looper.getMainLooper()).post{
-                rlStatus.visibility=View.VISIBLE
-                tvStatus.visibility=View.GONE
-            }
-        }
-
-        override fun onUserEnableVideo(uid: Int, enabled: Boolean) {
-            super.onUserEnableVideo(uid, enabled)
-            Log.d(TAG, "onUserEnableVideo=$uid,enabled=$enabled")
-        }
-
-        override fun onJoinChannelSuccess(channel: String?, uid: Int, elapsed: Int) {
-            super.onJoinChannelSuccess(channel, uid, elapsed)
-            Log.d(TAG, "onJoinChannelSuccess=$uid")
-        }
-
-        override fun onError(err: Int) {
-            super.onError(err)
-            Log.d(TAG, "onError=$err")
-        }
-
-        override fun onRemoteVideoStateChanged(uid: Int, state: Int, reason: Int, elapsed: Int) {
-            super.onRemoteVideoStateChanged(uid, state, reason, elapsed)
-            Log.d(TAG, "onRemoteVideoStateChanged=uid=$uid,state=$state,reason=$reason")
-        }
-
-        override fun onLeaveChannel(stats: RtcStats?) {
-            super.onLeaveChannel(stats)
-            Log.d(TAG, "onLeaveChannel=${stats?.totalDuration}")
-        }
-
-        override fun onFirstRemoteVideoFrame(uid: Int, width: Int, height: Int, elapsed: Int) {
-            super.onFirstRemoteVideoFrame(uid, width, height, elapsed)
-            Log.d(TAG, "onFirstRemoteVideoFrame====$uid")
-        }
-    }
 
     override fun onCreate() {
         mNM = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -246,25 +185,7 @@ class FloatWindowLiveService : Service() {
         }
     }
 
-    private fun initLiveEngine(context: Context, appId: String,token: String, channelName: String, optionalUid: Int) {
-        Log.d(TAG, "===========initLiveEngine")
-//        mRtcEngine = RtcEngine.create(context, "d4d4713353494ff5b93fca5ec5169f9b", mRtcEventHandler)
-        mRtcEngine = RtcEngine.create(context, appId, mRtcEventHandler)
-        hasInitialized = true
-        // 直播场景下，设置频道场景为 BROADCASTING。
-        mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING)
-        // 根据场景设置用户角色为 BORADCASTER 或 AUDIENCE。
-        mRtcEngine.setClientRole(Constants.CLIENT_ROLE_AUDIENCE)
 
-        // 视频默认禁用，你需要调用 enableVideo 开始视频流。
-        mRtcEngine.enableVideo()
-        mRtcEngine.joinChannel(
-            token, channelName,
-            "",
-            optionalUid
-        )
-        showFloatView()
-    }
 
     lateinit var dataSourceFactory: DataSource.Factory
     private fun buildMediaSource(uri: Uri, context: Context): MediaSource? {
@@ -563,8 +484,7 @@ class FloatWindowLiveService : Service() {
      */
     private fun removeWindowView() {
         if (hasAdded) {
-            mRtcEngine.leaveChannel()
-            RtcEngine.destroy()
+
             //移除悬浮窗口
             mWindowManager.removeView(mContainer)
             hasAdded = false
@@ -589,8 +509,9 @@ class FloatWindowLiveService : Service() {
 
                 override fun onSingleTapUp(e: MotionEvent): Boolean = false
 
+
                 override fun onScroll(
-                    e1: MotionEvent,
+                    e1: MotionEvent?,
                     e2: MotionEvent,
                     distanceX: Float,
                     distanceY: Float
@@ -609,7 +530,7 @@ class FloatWindowLiveService : Service() {
                 }
 
                 override fun onFling(
-                    e1: MotionEvent,
+                    e1: MotionEvent?,
                     e2: MotionEvent,
                     velocityX: Float,
                     velocityY: Float
